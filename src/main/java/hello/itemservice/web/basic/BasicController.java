@@ -8,10 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -57,4 +54,38 @@ public class BasicController {
         return "basic/addForm";
     }
 
+
+//    @PostMapping("/add")
+//    public String save(@RequestParam(name = "itemName") String itemName,
+//                       @RequestParam(name = "price") int price,
+//                       @RequestParam(name = "quantity") Integer quantity,
+//                       Model model) {
+//        Item item = new Item();
+//        item.setItemName(itemName);
+//        item.setQuantity(quantity);
+//        item.setPrice(price);
+//        Item saved = itemRepository.save(item);
+//
+//
+//        model.addAttribute("item",item);
+//        return "basic/item";
+//    }
+
+//    @PostMapping("/add")
+//    public String save(@ModelAttribute("item") Item item) {
+//        //@ModelAttribute가 알아서 Item setter 다 해줌
+//        itemRepository.save(item);
+////        model.addAttribute("item",item);
+//        // 이것도 주석 처리해도 됨 @ModelAttribute가 보통 뷰에서도 data를 쓴다고 판단하고,
+//        // 알아서 모델에다 넣어줌
+//        // 이떄 이름은 @ModelAttribute("item")에서 item으로 들어감
+//        return "basic/item";
+//    }
+
+    @PostMapping("/add")
+    public String save(Item item) {
+        //우리가 만든 객체는 왠만하면 생략해도 @ModelAttribute가 붙은걸로 인지됨
+        itemRepository.save(item);
+        return "basic/item";
+    }
 }
