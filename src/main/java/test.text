@@ -3,3 +3,17 @@
 java.lang.IllegalArgumentException: Name for argument of type [java.lang.String] not specified, and parameter name information not found in class file either.
 주로 다음 두 애노테이션에서 문제가 발생한다.
 @RequestParam, @PathVariable
+
+
+
+//상품 수정
+html form 전송은 put patch를 지원하지 않고, Get post만 사용할 수 있다.
+PUT, PATCH경우 HTTP API 전송시 사용
+
+
+//PRG 패턴
+
+상품 등록 폼의 경우  get /add 로 상품 등록 폼을 열고 상품을 등록하면
+-> post /add로 바뀜
+하지만 이때 그냥 새로고침을 하면 post /add가 계속 불리므로 상품이 중복으로 등록이 됨
+따라서 redirect를 해서 get /add로 다시 바꿔줘야 한다는 패턴

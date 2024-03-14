@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
@@ -82,10 +83,46 @@ public class BasicController {
 //        return "basic/item";
 //    }
 
+//    @PostMapping("/add")
+//    public String save(Item item) {
+//        //우리가 만든 객체는 왠만하면 생략해도 @ModelAttribute가 붙은걸로 인지됨
+//        itemRepository.save(item);
+//        return "basic/item";
+//    }
+
+    //PRG 패턴 적용
+//    @PostMapping("/add")
+//    public String save(Item item) {
+//        itemRepository.save(item);
+//        return "redirect:basic/items/" + item.getId();
+//        //redirect시 주의 사항
+//        // 그냥 문자열 연산 + 로 해주면 URL인코딩중에 뻑이 날 수가 있음
+//        // 따라서 RedirectAttributes라는 것을 사용하는게 안전함
+//    }
+
+    //redirectAttribute 적용
     @PostMapping("/add")
-    public String save(Item item) {
-        //우리가 만든 객체는 왠만하면 생략해도 @ModelAttribute가 붙은걸로 인지됨
-        itemRepository.save(item);
-        return "basic/item";
+    public String save(Item item, RedirectAttributes redirectAttributes) {
+        Item result = itemRepository.save(item);
+        redirectAttributes.addAttribute("itemId",result.getId());
+        redirectAttributes.addAttribute("status",true);
+        return "redirect:/basic/items/{itemId}";
     }
+
+
+
+    @GetMapping("/{itemId}/edit")
+    public String editForm(@PathVariable(name = "itemId") long itemId, Model model) {
+        Item item = itemRepository.findById(itemId);
+        model.addAttribute("item",item);
+        return "basic/editForm";
+    }
+
+    @PostMapping("/{itemId}/edit")
+    public String edit(@PathVariable(name = "itemId") long itemId, @ModelAttribute Item item) {
+        itemRepository.update(itemId,item);
+        //PathVariable에 있는게 그냥 redirect 주소로 들어감
+        return "redirect:/basic/items/{itemId}";
+    }
+
 }
